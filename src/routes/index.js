@@ -3,9 +3,11 @@ import Home from "../application/Home";
 import Recommend from "../application/Recommend";
 import RecommendMain from "../application/Recommend/main";
 import Singers from "../application/Singers";
+import SingersMain from "../application/Singers/main";
 import Rank from "../application/Rank";
 import RankMain from "../application/Rank/main";
 import Album from "../application/Album";
+import Singer from "../application/Singer";
 
 export default function Route() {
   let routes = [
@@ -30,6 +32,16 @@ export default function Route() {
         {
           path: "singers",
           element: <Singers />,
+          children: [
+            {
+              index: true,
+              element: <SingersMain />,
+            },
+            {
+              path: "/singers/:id",
+              element: <Singer />,
+            },
+          ],
         },
         {
           path: "rank",
