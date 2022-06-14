@@ -7,7 +7,7 @@ import { useNavigate } from "react-router";
 function RecommendList(props) {
   const navigate = useNavigate();
   const enterDetail = (id) => {
-    navigate(`/recommend/${id}`, { replace: true });
+    navigate(`/recommend/${id}`);
   };
   return (
     <ListWrapper>

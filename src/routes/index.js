@@ -1,6 +1,7 @@
 import { useRoutes } from "react-router-dom";
 import Home from "../application/Home";
 import Recommend from "../application/Recommend";
+import RecommendMain from "../application/Recommend/main";
 import Singers from "../application/Singers";
 import Rank from "../application/Rank";
 import Album from "../application/Album";
@@ -15,6 +16,10 @@ export default function Route() {
           path: "recommend",
           element: <Recommend />,
           children: [
+            {
+              index: true,
+              element: <RecommendMain />,
+            },
             {
               path: "/recommend/:id",
               element: <Album />,

@@ -17,7 +17,6 @@ function Slider(props) {
       <div className="swiper">
         <Swiper
           modules={[Pagination, Autoplay]}
-          onSwiper={(swiper) => console.log(swiper)}
           autoplay={autoplayOption}
           loop
           pagination
