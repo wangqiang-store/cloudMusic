@@ -7,6 +7,7 @@ import Scroll from "../../baseUI/scroll/index";
 import { Content } from "./style";
 import { forceCheck } from "react-lazyload";
 import Loading from "../../baseUI/loading/index";
+import { Outlet } from "react-router";
 
 function Recommend(props) {
   const { bannerList, recommendList, enterLoading } = props;
@@ -32,6 +33,7 @@ function Recommend(props) {
         <div>
           <Slider bannerList={bannerListJS}></Slider>
           <RecommendList recommendList={recommendListJS}></RecommendList>
+          <Outlet />
         </div>
       </Scroll>
       {enterLoading ? <Loading></Loading> : null}
