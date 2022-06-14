@@ -51,4 +51,5 @@ export const getName = (list) => {
   return str;
 };
 
-export const HEADER_HEIGHT = 45;
+// 判断一个对象是否为空
+export const isEmptyObject = (obj) => !obj || Object.keys(obj).length === 0;

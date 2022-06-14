@@ -4,6 +4,7 @@ import Recommend from "../application/Recommend";
 import RecommendMain from "../application/Recommend/main";
 import Singers from "../application/Singers";
 import Rank from "../application/Rank";
+import RankMain from "../application/Rank/main";
 import Album from "../application/Album";
 
 export default function Route() {
@@ -33,6 +34,16 @@ export default function Route() {
         {
           path: "rank",
           element: <Rank />,
+          children: [
+            {
+              index: true,
+              element: <RankMain />,
+            },
+            {
+              path: "/rank/:id",
+              element: <Album />,
+            },
+          ],
         },
       ],
     },
