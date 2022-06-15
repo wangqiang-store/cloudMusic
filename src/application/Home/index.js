@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet } from "react-router";
 import { Top, Tab, TabItem } from "./style";
 import { NavLink } from "react-router-dom"; // 利用 NavLink 组件进行路由跳转
+import Player from "../Player";
 
 function Home(props) {
   return (
@@ -28,7 +29,10 @@ function Home(props) {
           </TabItem>
         </NavLink>
       </Tab>
-      <main>{<Outlet />}</main>
+      <main>
+        {<Outlet />}
+        <Player></Player>
+      </main>
     </div>
   );
 }
