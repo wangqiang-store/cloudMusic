@@ -39,12 +39,16 @@ const ProgressBarWrapper = styled.div`
 function ProgressBar(props) {
   const { percentChange } = props;
 
+  const transform = prefixStyle("transform");
+
+  const { percent } = props;
+
   const progressBtnWidth = 5;
 
   const _changePercent = () => {
     const barWidth = progressBar.current.clientWidth - progressBtnWidth;
     const curPercent = progress.current.clientWidth / barWidth; // 新的进度计算
-    // percentChange(curPercent); // 把新的进度传给回调函数并执行
+    percentChange(curPercent); // 把新的进度传给回调函数并执行
   };
 
   const progressBar = useRef();
@@ -89,6 +93,19 @@ function ProgressBar(props) {
     _offset(offsetWidth);
     _changePercent();
   };
+
+  //监听percent
+  useEffect(() => {
+    if (percent >= 0 && percent <= 1 && !touch.initiated) {
+      const barWidth = progressBar.current.clientWidth - progressBtnWidth;
+      const offsetWidth = percent * barWidth;
+      progress.current.style.width = `${offsetWidth}px`;
+      progressBtn.current.style[
+        transform
+      ] = `translate3d(${offsetWidth}px, 0, 0)`;
+    }
+    // eslint-disable-next-line
+  }, [percent]);
   return (
     <ProgressBarWrapper>
       <div className="bar-inner" ref={progressBar} onClick={progressClick}>
