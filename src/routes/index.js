@@ -8,6 +8,7 @@ import Rank from "../application/Rank";
 import RankMain from "../application/Rank/main";
 import Album from "../application/Album";
 import Singer from "../application/Singer";
+import Search from "../application/Search";
 
 export default function Route() {
   let routes = [
@@ -60,6 +61,10 @@ export default function Route() {
               element: <Album />,
             },
           ],
+        },
+        {
+          path: "search",
+          element: <Search />,
         },
       ],
     },
