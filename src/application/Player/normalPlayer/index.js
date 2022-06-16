@@ -26,6 +26,7 @@ function NormalPlayer(props) {
     handlePrev,
     handleNext,
     changeMode,
+    togglePlayList,
   } = props;
   const normalPlayerRef = useRef();
   const cdWrapperRef = useRef();
@@ -113,6 +114,7 @@ function NormalPlayer(props) {
     }
     return content;
   };
+  
   return (
     <CSSTransition
       classNames="normal"
@@ -170,8 +172,10 @@ function NormalPlayer(props) {
                 dangerouslySetInnerHTML={{ __html: getPlayMode() }}
               ></i>
             </div>
-            <div className="icon i-left" onClick={handlePrev}>
-              <i className="iconfont">&#xe6e1;</i>
+            <div className="icon i-left">
+              <i className="iconfont" onClick={handlePrev}>
+                &#xe6e1;
+              </i>
             </div>
             <div className="icon i-center">
               <i
@@ -182,10 +186,12 @@ function NormalPlayer(props) {
                 }}
               ></i>
             </div>
-            <div className="icon i-right" onClick={handleNext}>
-              <i className="iconfont">&#xe718;</i>
-            </div>
             <div className="icon i-right">
+              <i className="iconfont" onClick={handleNext}>
+                &#xe718;
+              </i>
+            </div>
+            <div className="icon i-right" onClick={() => togglePlayList(true)}>
               <i className="iconfont">&#xe640;</i>
             </div>
           </Operators>

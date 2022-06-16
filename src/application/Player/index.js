@@ -13,6 +13,7 @@ import MiniPlayer from "./miniPlayer";
 import NormalPlayer from "./normalPlayer";
 import { getSongUrl, isEmptyObject, shuffle, findIndex } from "../../api/utils";
 import Toast from "./../../baseUI/toast/index";
+import PlayList from "./play-list";
 import { playMode } from "../../api/config";
 
 function Player(props) {
@@ -33,6 +34,7 @@ function Player(props) {
     changePlayListDispatch, //改变playList
     changeModeDispatch, //改变mode
     toggleFullScreenDispatch,
+    togglePlayListDispatch,
   } = props;
 
   const audioRef = useRef();
@@ -48,6 +50,7 @@ function Player(props) {
   const [modeText, setModeText] = useState("");
 
   const toastRef = useRef();
+  const songReady = useRef(true);
 
   const playList = immutablePlayList ? immutablePlayList.toJS() : {};
   const sequencePlayList = immutableSequencePlayList
@@ -136,25 +139,35 @@ function Player(props) {
     }
   };
 
+  const handleError = () => {
+    songReady.current = true;
+    alert("播放出错");
+  };
+
   useEffect(() => {
     if (
       !playList.length ||
       currentIndex === -1 ||
       !playList[currentIndex] ||
-      playList[currentIndex].id === preSong.id
+      playList[currentIndex].id === preSong.id ||
+      !songReady.current // 标志位为 false
     )
       return;
     let current = playList[currentIndex];
     changeCurrentDispatch(current); //赋值currentSong
     setPreSong(current);
+    songReady.current = false; // 把标志位置为 false, 表示现在新的资源没有缓冲完成，不能切歌
     audioRef.current.src = getSongUrl(current.id);
     setTimeout(() => {
-      audioRef.current.play();
+      // 注意，play 方法返回的是一个 promise 对象
+      audioRef.current.play().then(() => {
+        songReady.current = true;
+      });
     });
     togglePlayingDispatch(true); //播放状态
     setCurrentTime(0); //从头开始播放
     setDuration((current.dt / 1000) | 0); //时长
-  }, [currentIndex]);
+  }, [playList, currentIndex]);
 
   useEffect(() => {
     playing ? audioRef.current.play() : audioRef.current.pause();
@@ -169,6 +182,7 @@ function Player(props) {
           toggleFullScreen={toggleFullScreenDispatch}
           clickPlaying={clickPlaying}
           percent={percent}
+          togglePlayList={togglePlayListDispatch}
         />
       ) : null}
 
@@ -187,13 +201,16 @@ function Player(props) {
           onProgressChange={onProgressChange}
           mode={mode}
           changeMode={changeMode}
+          togglePlayList={togglePlayListDispatch}
         />
       ) : null}
       <Toast text={modeText} ref={toastRef}></Toast>
+      <PlayList></PlayList>
       <audio
         ref={audioRef}
         onTimeUpdate={updateTime}
         onEnded={handleEnd}
+        onError={handleError}
       ></audio>
     </div>
   );
