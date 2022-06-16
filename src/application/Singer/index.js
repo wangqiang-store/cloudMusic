@@ -15,6 +15,7 @@ import { HEADER_HEIGHT } from "./../../api/config";
 import { connect } from "react-redux";
 import { getSingerInfo, changeEnterLoading } from "./store/actionCreators";
 import Loading from "./../../baseUI/loading/index";
+import MusicNote from "../../baseUI/music-note/index";
 function Singer(props) {
   const navigate = useNavigate();
   const params = useParams();
@@ -39,6 +40,11 @@ function Singer(props) {
 
   // 往上偏移的尺寸，露出圆角
   const OFFSET = 5;
+
+  const musicNoteRef = useRef();
+  const musicAnimation = (x, y) => {
+    musicNoteRef.current.startAnimation({ x, y });
+  };
 
   useEffect(() => {
     getSingerDataDispatch(id);
@@ -123,10 +129,15 @@ function Singer(props) {
         <BgLayer ref={layer}></BgLayer>
         <SongListWrapper ref={songScrollWrapper}>
           <Scroll ref={songScroll} onScroll={handleScroll}>
-            <SongsList songs={songs} showCollect={false}></SongsList>
+            <SongsList
+              songs={songs}
+              showCollect={false}
+              musicAnimation={musicAnimation}
+            ></SongsList>
           </Scroll>
         </SongListWrapper>
         {loading ? <Loading></Loading> : null}
+        <MusicNote ref={musicNoteRef}></MusicNote>
       </Container>
     </CSSTransition>
   );

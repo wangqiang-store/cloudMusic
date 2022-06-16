@@ -12,6 +12,8 @@ import {
 import MiniPlayer from "./miniPlayer";
 import NormalPlayer from "./normalPlayer";
 import { getSongUrl, isEmptyObject, shuffle, findIndex } from "../../api/utils";
+import Toast from "./../../baseUI/toast/index";
+import { playMode } from "../../api/config";
 
 function Player(props) {
   const {
@@ -43,6 +45,9 @@ function Player(props) {
   const [preSong, setPreSong] = useState({});
   //歌曲播放进度
   let percent = isNaN(currentTime / duration) ? 0 : currentTime / duration;
+  const [modeText, setModeText] = useState("");
+
+  const toastRef = useRef();
 
   const playList = immutablePlayList ? immutablePlayList.toJS() : {};
   const sequencePlayList = immutableSequencePlayList
@@ -106,53 +111,50 @@ function Player(props) {
       changePlayListDispatch(sequencePlayList);
       let index = findIndex(currentSong, sequencePlayList);
       changeCurrentIndexDispatch(index);
+      setModeText("顺序循环");
     } else if (newMode === 1) {
       //单曲循环
       changePlayListDispatch(sequencePlayList);
+      setModeText("单曲循环");
     } else if (newMode === 2) {
       //随机播放
       let newList = shuffle(sequencePlayList);
       let index = findIndex(currentSong, newList);
       changePlayListDispatch(newList);
       changeCurrentIndexDispatch(index);
+      setModeText("随机播放");
     }
     changeModeDispatch(newMode);
+    toastRef.current.show();
   };
 
-    useEffect(() => {
-      if (!currentSong) return;
-      changeCurrentIndexDispatch(0); //currentIndex默认为-1，临时改成0
-      console.log(currentIndex);
-      let current = playList[0];
-      changeCurrentDispatch(current); //赋值currentSong
-      audioRef.current.src = getSongUrl(current.id);
-      setTimeout(() => {
-        audioRef.current.play();
-      });
-      togglePlayingDispatch(true); //播放状态
-      setCurrentTime(0); //从头开始播放
-      setDuration((current.dt / 1000) | 0); //时长
-    }, []);
+  const handleEnd = () => {
+    if (mode === playMode.loop) {
+      handleLoop();
+    } else {
+      handleNext();
+    }
+  };
 
-  //   useEffect(() => {
-  //     if (
-  //       !playList.length ||
-  //       currentIndex === -1 ||
-  //       !playList[currentIndex] ||
-  //       playList[currentIndex].id === preSong.id
-  //     )
-  //       return;
-  //     let current = playList[currentIndex];
-  //     changeCurrentDispatch(current); //赋值currentSong
-  //     setPreSong(current);
-  //     audioRef.current.src = getSongUrl(current.id);
-  //     setTimeout(() => {
-  //       audioRef.current.play();
-  //     });
-  //     togglePlayingDispatch(true); //播放状态
-  //     setCurrentTime(0); //从头开始播放
-  //     setDuration((current.dt / 1000) | 0); //时长
-  //   }, [currentIndex]);
+  useEffect(() => {
+    if (
+      !playList.length ||
+      currentIndex === -1 ||
+      !playList[currentIndex] ||
+      playList[currentIndex].id === preSong.id
+    )
+      return;
+    let current = playList[currentIndex];
+    changeCurrentDispatch(current); //赋值currentSong
+    setPreSong(current);
+    audioRef.current.src = getSongUrl(current.id);
+    setTimeout(() => {
+      audioRef.current.play();
+    });
+    togglePlayingDispatch(true); //播放状态
+    setCurrentTime(0); //从头开始播放
+    setDuration((current.dt / 1000) | 0); //时长
+  }, [currentIndex]);
 
   useEffect(() => {
     playing ? audioRef.current.play() : audioRef.current.pause();
@@ -187,8 +189,12 @@ function Player(props) {
           changeMode={changeMode}
         />
       ) : null}
-
-      <audio ref={audioRef} onTimeUpdate={updateTime}></audio>
+      <Toast text={modeText} ref={toastRef}></Toast>
+      <audio
+        ref={audioRef}
+        onTimeUpdate={updateTime}
+        onEnded={handleEnd}
+      ></audio>
     </div>
   );
 }

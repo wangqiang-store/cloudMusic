@@ -12,6 +12,7 @@ import { connect } from "react-redux";
 import { getAlbumList, changeEnterLoading } from "./store/actionCreators";
 import Loading from "../../baseUI/loading/index";
 import SongList from "../SongList";
+import MusicNote from "../../baseUI/music-note/index";
 
 function Album(props) {
   const params = useParams();
@@ -25,6 +26,12 @@ function Album(props) {
   const [title, setTitle] = useState("歌单");
   const [isMarquee, setIsMarquee] = useState(false); // 是否跑马灯
   const navigate = useNavigate();
+
+  const musicNoteRef = useRef();
+
+  const musicAnimation = (x, y) => {
+    musicNoteRef.current.startAnimation({ x, y });
+  };
 
   useEffect(() => {
     getAlbumDataDispatch(id);
@@ -117,6 +124,7 @@ function Album(props) {
         collectCount={currentAlbum.subscribedCount}
         songs={currentAlbum.tracks}
         showCollect={true}
+        musicAnimation={musicAnimation}
       />
     );
   };
@@ -147,6 +155,7 @@ function Album(props) {
           </Scroll>
         ) : null}
         {enterLoading ? <Loading></Loading> : null}
+        <MusicNote ref={musicNoteRef}></MusicNote>
       </Container>
     </CSSTransition>
   );
