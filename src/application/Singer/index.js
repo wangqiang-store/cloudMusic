@@ -20,7 +20,12 @@ function Singer(props) {
   const navigate = useNavigate();
   const params = useParams();
   const { id } = params;
-  const { artist: immutableArtist, songs: immutableSongs, loading } = props;
+  const {
+    artist: immutableArtist,
+    songs: immutableSongs,
+    loading,
+    songsCount,
+  } = props;
   const { getSingerDataDispatch } = props;
 
   const artist = immutableArtist ? immutableArtist.toJS() : {};
@@ -113,7 +118,7 @@ function Singer(props) {
       unmountOnExit
       onExited={handleExited}
     >
-      <Container>
+      <Container play={songsCount}>
         <Header
           handleClick={setShowStatusFalse}
           title={artist.name}
@@ -148,6 +153,7 @@ const mapStateToProps = (state) => ({
   artist: state.getIn(["singerInfo", "artist"]),
   songs: state.getIn(["singerInfo", "songsOfArtist"]),
   loading: state.getIn(["singerInfo", "loading"]),
+  songsCount: state.getIn(["player", "playList"]).size,
 });
 // 映射 dispatch 到 props 上
 const mapDispatchToProps = (dispatch) => {

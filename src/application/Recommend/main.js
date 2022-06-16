@@ -9,11 +9,12 @@ import { forceCheck } from "react-lazyload";
 import Loading from "../../baseUI/loading/index";
 
 function RecommendMain(props) {
-  const { bannerList, recommendList, enterLoading } = props;
+  const { bannerList, recommendList, enterLoading, songsCount } = props;
 
   const { getBannerDataDispatch, getRecommendListDataDispatch } = props;
 
   useEffect(() => {
+    console.log('bannerList.size: ', bannerList.size);
     if (!bannerList.size) {
       getBannerDataDispatch();
     }
@@ -27,7 +28,7 @@ function RecommendMain(props) {
   const recommendListJS = recommendList ? recommendList.toJS() : [];
 
   return (
-    <Content>
+    <Content play={songsCount}>
       <Scroll onScroll={forceCheck}>
         <div>
           <Slider bannerList={bannerListJS}></Slider>
@@ -45,6 +46,7 @@ const mapStateToProps = (state) => ({
   bannerList: state.getIn(["recommend", "bannerList"]),
   recommendList: state.getIn(["recommend", "recommendList"]),
   enterLoading: state.getIn(["recommend", "enterLoading"]), //简单数据类型不需要调用toJS
+  songsCount: state.getIn(["player", "playList"]).size,
 });
 // 映射dispatch到props上
 const mapDispatchToProps = (dispatch) => {

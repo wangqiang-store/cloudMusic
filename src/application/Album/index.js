@@ -18,7 +18,11 @@ function Album(props) {
   const params = useParams();
   const { id } = params;
 
-  const { currentAlbum: currentAlbumImmutable, enterLoading } = props;
+  const {
+    currentAlbum: currentAlbumImmutable,
+    enterLoading,
+    songsCount,
+  } = props;
   const { getAlbumDataDispatch } = props;
   const headerEl = useRef();
   const [showStatus, setShowStatus] = useState(true);
@@ -138,7 +142,7 @@ function Album(props) {
       unmountOnExit
       onExited={handleExited}
     >
-      <Container>
+      <Container play={songsCount}>
         <Header
           ref={headerEl}
           title={title}
@@ -165,6 +169,7 @@ function Album(props) {
 const mapStateToProps = (state) => ({
   currentAlbum: state.getIn(["album", "currentAlbum"]),
   enterLoading: state.getIn(["album", "enterLoading"]),
+  songsCount: state.getIn(["player", "playList"]).size,
 });
 // 映射 dispatch 到 props 上
 const mapDispatchToProps = (dispatch) => {

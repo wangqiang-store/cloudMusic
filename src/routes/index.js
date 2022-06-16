@@ -16,6 +16,10 @@ export default function Route() {
       element: <Home />,
       children: [
         {
+          index: true,
+          element: <RecommendMain />,
+        },
+        {
           path: "recommend",
           element: <Recommend />,
           children: [

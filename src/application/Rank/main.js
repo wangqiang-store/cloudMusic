@@ -10,7 +10,7 @@ import { useNavigate } from "react-router";
 
 function RankMain(props) {
   let navigate = useNavigate();
-  const { rankList: list, loading } = props;
+  const { rankList: list, loading, songsCount } = props;
 
   const { getRankListDataDispatch } = props;
 
@@ -68,7 +68,7 @@ function RankMain(props) {
 
   let displayStyle = loading ? { display: "none" } : { display: "" };
   return (
-    <Container>
+    <Container play={songsCount}>
       <Scroll>
         <div>
           <h1 className="offical" style={displayStyle}>
@@ -94,6 +94,7 @@ function RankMain(props) {
 const mapStateToProps = (state) => ({
   rankList: state.getIn(["rank", "rankList"]),
   loading: state.getIn(["rank", "loading"]),
+  songsCount: state.getIn(["player", "playList"]).size,
 });
 // 映射dispatch到props上
 const mapDispatchToProps = (dispatch) => {
