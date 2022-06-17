@@ -57,7 +57,6 @@ function Search(props) {
 
   const renderHotKey = () => {
     let list = hotList ? hotList.toJS() : [];
-    console.log("list: ", list);
     return (
       <ul>
         {list.map((item) => {
