@@ -7,7 +7,7 @@ import Player from "../Player";
 function Home(props) {
   const navigate = useNavigate();
   const onSearch = () => {
-    navigate("search");
+    navigate("/search");
   };
   return (
     <div>

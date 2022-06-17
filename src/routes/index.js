@@ -66,6 +66,10 @@ export default function Route() {
           path: "search",
           element: <Search />,
         },
+        {
+          path: "album/:id",
+          element: <Album />,
+        },
       ],
     },
   ];
