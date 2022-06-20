@@ -67,7 +67,6 @@ function ProgressBar(props) {
     startTouch.initiated = true; //initial 为 true 表示滑动动作开始了
     startTouch.startX = e.touches[0].pageX; // 滑动开始时横向坐标
     startTouch.left = progress.current.clientWidth; // 当前 progress 长度
-    console.log("startTouch: ", startTouch);
     setTouch(startTouch);
   };
 
